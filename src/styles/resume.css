@@ -1,0 +1,318 @@
+/* ============================================================
+   Resume page styles — driven by CSS variables set per theme:
+   --font-body, --font-heading, --accent, --heading-transform,
+   --heading-weight, --heading-spacing, --name-size
+   ============================================================ */
+
+.resume {
+  --font-body: "Inter", sans-serif;
+  --font-heading: "Inter", sans-serif;
+  --accent: #000000;
+  --heading-transform: uppercase;
+  --heading-weight: 700;
+  --heading-spacing: 0.06em;
+  --name-size: 20pt;
+  --margin-v: 10mm;
+  --margin-h: 10mm;
+
+  width: 210mm;
+  min-height: 297mm;
+  background: #ffffff;
+  color: #1a1a1a;
+  font-family: var(--font-body);
+  font-size: 10pt;
+  line-height: 1.42;
+}
+
+.rs-icon {
+  width: 2.9mm;
+  height: 2.9mm;
+  stroke-width: 1.8;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.rs-muted {
+  color: #555;
+}
+
+.rs-body-text {
+  margin: 0 0 5px;
+}
+
+.rs-entry {
+  margin-bottom: 10px;
+  break-inside: avoid;
+}
+
+.rs-entry-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.rs-entry-top strong {
+  font-size: 10.5pt;
+  font-weight: 700;
+}
+
+.rs-entry-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.rs-date {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-size: 9pt;
+  color: #333;
+  white-space: nowrap;
+}
+
+.rs-loc {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-size: 8.5pt;
+  color: #666;
+  margin-top: 1px;
+}
+
+.rs-entry-sub {
+  font-size: 9.5pt;
+  color: #333;
+  margin: 1px 0 3px;
+}
+
+.rs-tech {
+  font-size: 8.8pt;
+  color: #555;
+  font-style: italic;
+  margin: 1px 0 3px;
+}
+
+.rs-bullets {
+  margin: 3px 0 0;
+  padding-left: 15px;
+}
+
+.rs-bullets li {
+  margin-bottom: 2.5px;
+}
+
+.rs-section {
+  margin-bottom: 11px;
+}
+
+.rs-section-title {
+  margin: 0 0 7px;
+  font-family: var(--font-heading);
+  font-size: 10pt;
+  font-weight: var(--heading-weight);
+  text-transform: var(--heading-transform);
+  letter-spacing: var(--heading-spacing);
+  color: var(--accent);
+  border-bottom: 1.4px solid var(--accent);
+  padding-bottom: 3px;
+}
+
+/* ===== Compact shared header (both templates) ===== */
+.rs-header {
+  margin-bottom: 10px;
+  padding-bottom: 7px;
+  border-bottom: 2px solid var(--accent);
+}
+
+.rs-header-name {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--name-size);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #111;
+  line-height: 1.1;
+}
+
+.rs-header-title {
+  margin: 2px 0 6px;
+  font-size: 10.5pt;
+  font-weight: 500;
+  color: #333;
+}
+
+.rs-header-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 8.6pt;
+  color: #333;
+}
+
+.rs-header-contact span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ===== Single column ===== */
+.resume-single {
+  padding: var(--margin-v) var(--margin-h);
+}
+
+.rs-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rs-skill-row {
+  font-size: 9.5pt;
+}
+
+.rs-skill-row strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ===== Two column ===== */
+.resume-two {
+  display: block;
+}
+
+.tc2-header {
+  padding: var(--margin-v) var(--margin-h) 0;
+}
+
+.rs-header--two {
+  padding-bottom: 7px;
+  margin-bottom: 0;
+}
+
+.tc2-grid {
+  display: grid;
+  grid-template-columns: 1fr 70mm;
+}
+
+.tc2-main {
+  padding: 10px var(--margin-h) var(--margin-v) var(--margin-h);
+}
+
+.tc2-side {
+  padding: 10px var(--margin-h) var(--margin-v) 6mm;
+}
+
+.tc2-section {
+  margin-bottom: 12px;
+}
+
+.tc2-block {
+  margin-bottom: 13px;
+  break-inside: avoid;
+}
+
+.tc2-skill {
+  margin-bottom: 7px;
+}
+
+.tc2-skill strong {
+  display: block;
+  font-size: 8.8pt;
+  font-family: var(--font-heading);
+  font-weight: var(--heading-weight);
+  text-transform: var(--heading-transform);
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 1px;
+}
+
+.tc2-skill p {
+  margin: 0;
+  font-size: 8.8pt;
+  color: #333;
+}
+
+.tc2-edu {
+  margin-bottom: 9px;
+}
+
+.tc2-edu strong {
+  display: block;
+  font-size: 9.3pt;
+  font-weight: 700;
+}
+
+.tc2-edu p {
+  margin: 1px 0;
+  font-size: 8.7pt;
+}
+
+.tc2-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 8.7pt;
+}
+
+.tc2-list li {
+  margin-bottom: 5px;
+}
+
+.tc2-list li strong {
+  display: block;
+  font-size: 9pt;
+}
+
+/* ===== Print / PDF export ===== */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    height: auto !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .app,
+  .app-body,
+  .main-pane,
+  .preview-scroll {
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .editor-pane,
+  .toolbar,
+  .toast {
+    display: none !important;
+  }
+
+  .page-frame {
+    box-shadow: none !important;
+    width: auto !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    outline: none !important;
+  }
+
+  .resume {
+    width: 210mm !important;
+    min-height: 297mm !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+}
