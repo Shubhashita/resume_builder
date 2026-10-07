@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FileDown, FileJson, Upload, FileText, LayoutTemplate } from 'lucide-react'
 import Form from './components/Form'
-import TemplatePicker from './components/TemplatePicker'
+import TemplateSidebar from './components/TemplateSidebar'
 import { getTemplate } from './templates'
 import { getPageSize } from './data/pageSizes'
 import { DEFAULT_RESUME } from './data/defaultResume'
@@ -36,7 +36,7 @@ export default function App() {
   const [data, setData] = useState(loadInitialData)
   const [toast, setToast] = useState(null)
   const [uiTheme, setUiTheme] = useState(() => localStorage.getItem('resume-builder-ui-theme') || 'light')
-  const [templateOpen, setTemplateOpen] = useState(false)
+  const [sidebarMode, setSidebarMode] = useState('editor')
   const fileRef = useRef(null)
 
   useEffect(() => {
@@ -107,41 +107,69 @@ export default function App() {
           initial={{ x: -40, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="editor-pane w-[400px] min-w-[340px] shrink-0 overflow-y-auto border-r bg-card"
+          className="editor-pane w-[400px] min-w-[340px] shrink-0 flex flex-col border-r bg-card overflow-hidden"
         >
-          <div className="sticky top-0 z-10 flex items-center gap-2 border-b bg-card/95 px-4 py-3 backdrop-blur">
-            <FileText className="h-5 w-5 text-primary" />
-            <div>
-              <h1 className="text-sm font-bold leading-tight">Resume Builder</h1>
-              <p className="text-[11px] text-muted-foreground">Edit, theme, export JSON / PDF</p>
-            </div>
-            <div className="ml-auto flex items-center gap-1.5">
-              <span className="mr-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">UI</span>
-              {UI_THEMES.map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  title={`${t.name} UI theme`}
-                  aria-label={`${t.name} UI theme`}
-                  onClick={() => setUiTheme(t.id)}
-                  className={cn(
-                    'h-5 w-5 rounded-full border transition-transform duration-200 hover:scale-110',
-                    uiTheme === t.id
-                      ? 'border-primary ring-2 ring-primary ring-offset-2'
-                      : 'border-border'
-                  )}
-                  style={{ background: `linear-gradient(135deg, ${t.colors[0]} 50%, ${t.colors[1]} 50%)` }}
+          <AnimatePresence mode="wait">
+            {sidebarMode === 'templates' ? (
+              <motion.div
+                key="templates"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.2 }}
+                className="flex-1 flex flex-col min-h-0"
+              >
+                <TemplateSidebar
+                  data={data}
+                  onChange={setData}
+                  onContinue={() => setSidebarMode('editor')}
                 />
-              ))}
-            </div>
-          </div>
-          <Form
-            data={data}
-            onChange={setData}
-            onImport={handleImportClick}
-            onExport={handleExport}
-            onOpenTemplates={() => setTemplateOpen(true)}
-          />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="form"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+                className="flex flex-1 flex-col overflow-y-auto min-h-0"
+              >
+                <div className="sticky top-0 z-10 shrink-0 flex items-center gap-2 border-b bg-card/95 px-4 py-3 backdrop-blur">
+                  <FileText className="h-5 w-5 text-primary" />
+                  <div>
+                    <h1 className="text-sm font-bold leading-tight">Resume Builder</h1>
+                    <p className="text-[11px] text-muted-foreground">Edit, theme, export JSON / PDF</p>
+                  </div>
+                  <div className="ml-auto flex items-center gap-1.5">
+                    <span className="mr-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">UI</span>
+                    {UI_THEMES.map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        title={`${t.name} UI theme`}
+                        aria-label={`${t.name} UI theme`}
+                        onClick={() => setUiTheme(t.id)}
+                        className={cn(
+                          'h-5 w-5 rounded-full border transition-transform duration-200 hover:scale-110',
+                          uiTheme === t.id
+                            ? 'border-primary ring-2 ring-primary ring-offset-2'
+                            : 'border-border'
+                        )}
+                        style={{ background: `linear-gradient(135deg, ${t.colors[0]} 50%, ${t.colors[1]} 50%)` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <Form
+                  data={data}
+                  onChange={setData}
+                  onImport={handleImportClick}
+                  onExport={handleExport}
+                  onOpenTemplates={() => setSidebarMode('templates')}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.aside>
 
         {/* Preview */}
@@ -162,7 +190,7 @@ export default function App() {
               />
             </div>
             <div className="toolbar-actions flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={() => setTemplateOpen(true)}>
+              <Button variant="outline" size="sm" onClick={() => setSidebarMode('templates')}>
                 <LayoutTemplate className="h-4 w-4" />
                 Templates
               </Button>
@@ -192,7 +220,7 @@ export default function App() {
                   transition={{ duration: 0.4, ease: 'easeOut' }}
                   className="page-frame bg-white shadow-2xl"
                 >
-                  <Template data={data} />
+                  <Template data={data} onChange={setData} />
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -206,12 +234,6 @@ export default function App() {
         accept=".json,application/json"
         onChange={handleImportFile}
         style={{ display: 'none' }}
-      />
-      <TemplatePicker
-        open={templateOpen}
-        data={data}
-        onChange={setData}
-        onClose={() => setTemplateOpen(false)}
       />
       <Toaster toast={toast} />
     </div>

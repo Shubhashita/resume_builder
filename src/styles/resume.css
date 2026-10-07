@@ -1,9 +1,3 @@
-/* ============================================================
-   Resume page styles — driven by CSS variables set per theme:
-   --font-body, --font-heading, --accent, --heading-transform,
-   --heading-weight, --heading-spacing, --name-size
-   ============================================================ */
-
 .resume {
   --font-body: "Inter", sans-serif;
   --font-heading: "Inter", sans-serif;
@@ -140,7 +134,7 @@
 
 .rs-header-title {
   margin: 2px 0 6px;
-  font-size: 10.5pt;
+  font-size: 10.9pt;
   font-weight: 500;
   color: #333;
 }
@@ -216,9 +210,12 @@
 }
 
 .resume-two .rs-section-title {
-  font-size: 10.5pt;
+  font-size: 11.5pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   margin-bottom: 8px;
-  border-bottom: 1.8px solid var(--accent);
+  border-bottom: 1.5px solid var(--accent);
   padding-bottom: 3px;
 }
 
@@ -245,13 +242,13 @@
 
 .tc2-item-title {
   display: block;
-  font-size: 10.5pt;
+  font-size: 10.9pt;
   font-weight: 700;
   color: #1a1a1a;
 }
 
 .tc2-item-sub {
-  font-size: 9.3pt;
+  font-size: 9.5pt;
   color: #555;
   margin-top: 1px;
 }
@@ -271,7 +268,7 @@
   color: #666;
 }
 
-/* Bullets — exact filled round markers as in the design */
+/* Bullets â€” exact filled round markers as in the design */
 .resume-two .rs-bullets {
   list-style: disc;
   padding-left: 14px;
@@ -312,7 +309,7 @@
   line-height: 1.2;
 }
 
-/* Skills — dynamic category headings, title case, dark */
+/* Skills â€” dynamic category headings, title case, dark */
 .tc2-skill-cat {
   display: block;
   font-size: 9.5pt;
@@ -391,4 +388,38 @@
     box-shadow: none !important;
     margin: 0 !important;
   }
+}
+
+.tc2-edu-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-left: 1.5px solid #a0a0a0;
+  padding-left: 12px;
+  margin-left: 8px;
+}
+
+.tc2-edu-right-label {
+  font-size: 8pt;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+
+.tc2-edu-right-value {
+  font-size: 9.5pt;
+  font-weight: 600;
+  color: #333;
+}
+
+.tc2-side .tc2-item-title {
+  font-size: 10pt;
+  line-height: 1.35;
+}
+
+.tc2-side .tc2-item-sub {
+  font-size: 9pt;
+  line-height: 1.35;
 }
