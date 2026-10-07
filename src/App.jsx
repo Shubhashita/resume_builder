@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FileDown, FileJson, Upload, FileText, LayoutTemplate } from 'lucide-react'
+import { FileDown, FileJson, Upload, FileText, LayoutTemplate, Palette } from 'lucide-react'
 import Form from './components/Form'
 import TemplateSidebar from './components/TemplateSidebar'
+import DesignSidebar from './components/DesignSidebar'
 import { getTemplate } from './templates'
 import { getPageSize } from './data/pageSizes'
 import { DEFAULT_RESUME } from './data/defaultResume'
@@ -125,6 +126,21 @@ export default function App() {
                   onContinue={() => setSidebarMode('editor')}
                 />
               </motion.div>
+            ) : sidebarMode === 'design' ? (
+              <motion.div
+                key="design"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.2 }}
+                className="flex-1 flex flex-col min-h-0"
+              >
+                <DesignSidebar
+                  data={data}
+                  onChange={setData}
+                  onContinue={() => setSidebarMode('editor')}
+                />
+              </motion.div>
             ) : (
               <motion.div
                 key="form"
@@ -193,6 +209,10 @@ export default function App() {
               <Button variant="outline" size="sm" onClick={() => setSidebarMode('templates')}>
                 <LayoutTemplate className="h-4 w-4" />
                 Templates
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setSidebarMode('design')}>
+                <Palette className="h-4 w-4" />
+                Design
               </Button>
               <Button variant="outline" size="sm" onClick={handleImportClick}>
                 <Upload className="h-4 w-4" />
