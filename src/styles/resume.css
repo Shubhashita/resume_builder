@@ -15,8 +15,8 @@
   --margin-v: 10mm;
   --margin-h: 10mm;
 
-  width: 210mm;
-  min-height: 297mm;
+  width: var(--page-w, 210mm);
+  min-height: var(--page-h, 297mm);
   background: #ffffff;
   color: #1a1a1a;
   font-family: var(--font-body);
@@ -189,13 +189,22 @@
 }
 
 .rs-header--two {
-  padding-bottom: 7px;
-  margin-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: 2px;
+  border-bottom: none;
+}
+
+.rs-header--two .rs-header-title {
+  color: #555;
+}
+
+.tc2-contact-row {
+  flex-basis: 100%;
 }
 
 .tc2-grid {
   display: grid;
-  grid-template-columns: 1fr 70mm;
+  grid-template-columns: 1fr 82mm;
 }
 
 .tc2-main {
@@ -203,7 +212,14 @@
 }
 
 .tc2-side {
-  padding: 10px var(--margin-h) var(--margin-v) 6mm;
+  padding: 10px var(--margin-h) var(--margin-v) 7mm;
+}
+
+.resume-two .rs-section-title {
+  font-size: 10.5pt;
+  margin-bottom: 8px;
+  border-bottom: 1.8px solid var(--accent);
+  padding-bottom: 3px;
 }
 
 .tc2-section {
@@ -215,40 +231,100 @@
   break-inside: avoid;
 }
 
-.tc2-skill {
-  margin-bottom: 7px;
+/* Entry items + light dashed partition between every item */
+.tc2-item {
+  margin-bottom: 9px;
+  break-inside: avoid;
 }
 
-.tc2-skill strong {
+.tc2-item--divided {
+  border-top: 1px dashed #c9c9c9;
+  margin-top: 9px;
+  padding-top: 9px;
+}
+
+.tc2-item-title {
   display: block;
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.tc2-item-sub {
+  font-size: 9.3pt;
+  color: #555;
+  margin-top: 1px;
+}
+
+.tc2-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin-top: 2px;
+}
+
+.tc2-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 8.8pt;
-  font-family: var(--font-heading);
-  font-weight: var(--heading-weight);
-  text-transform: var(--heading-transform);
-  letter-spacing: 0.04em;
-  color: var(--accent);
+  color: #666;
+}
+
+/* Bullets — exact filled round markers as in the design */
+.resume-two .rs-bullets {
+  list-style: disc;
+  padding-left: 14px;
+  margin: 3px 0 0;
+}
+
+.resume-two .rs-bullets li {
+  margin-bottom: 2.5px;
+}
+
+.resume-two .rs-bullets li::marker {
+  color: #1a1a1a;
+}
+
+/* Education right-side value (e.g. CGPA 8.94 / 10.00) */
+.tc2-edu-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.tc2-edu-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.tc2-edu-right-label {
+  font-size: 8pt;
+  color: #777;
+  line-height: 1.2;
+}
+
+.tc2-edu-right-value {
+  font-size: 9.5pt;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.2;
+}
+
+/* Skills — dynamic category headings, title case, dark */
+.tc2-skill-cat {
+  display: block;
+  font-size: 9.5pt;
+  font-weight: 700;
+  color: #1a1a1a;
   margin-bottom: 1px;
 }
 
-.tc2-skill p {
+.tc2-skill-items {
   margin: 0;
-  font-size: 8.8pt;
-  color: #333;
-}
-
-.tc2-edu {
-  margin-bottom: 9px;
-}
-
-.tc2-edu strong {
-  display: block;
-  font-size: 9.3pt;
-  font-weight: 700;
-}
-
-.tc2-edu p {
-  margin: 1px 0;
-  font-size: 8.7pt;
+  font-size: 9pt;
+  color: #555;
 }
 
 .tc2-list {
@@ -310,8 +386,8 @@
   }
 
   .resume {
-    width: 210mm !important;
-    min-height: 297mm !important;
+    width: var(--page-w, 210mm) !important;
+    min-height: var(--page-h, 297mm) !important;
     box-shadow: none !important;
     margin: 0 !important;
   }

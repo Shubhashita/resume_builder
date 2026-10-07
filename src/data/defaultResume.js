@@ -1,3 +1,5 @@
+import { DEFAULT_PAGE_SIZE } from './pageSizes'
+
 export const MARGIN_OPTIONS = [0, 1, 2, 3, 5, 7, 10]
 
 export function clampMargin(value, fallback = 10) {
@@ -8,6 +10,7 @@ export function clampMargin(value, fallback = 10) {
 export const DEFAULT_RESUME = {
   meta: {
     template: 'two-column',
+    pageSize: DEFAULT_PAGE_SIZE,
     themeId: 'minimal-black',
     accent: '',
     fontHeading: '',
@@ -20,7 +23,7 @@ export const DEFAULT_RESUME = {
     fullName: 'Shubhashita Singh',
     jobTitle: 'Software Engineer',
     email: 'shubhashita.aes@gmail.com',
-    phone: '4919119881886',
+    phone: '+91 9119881886',
     location: 'Bangalore, Karnataka',
     website: 'ishubhashita.web.app',
     linkedin: 'linkedin.com/in/shubhashita-singh',
@@ -64,7 +67,9 @@ export const DEFAULT_RESUME = {
       location: 'Bhopal, Madhya Pradesh',
       start: '10/2021',
       end: '05/2025',
-      details: 'CGPA: 8.94 / 10.00',
+      rightLabel: 'CGPA',
+      rightValue: '8.94 / 10.00',
+      details: '',
     },
   ],
   skills: [

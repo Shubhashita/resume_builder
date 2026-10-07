@@ -14,6 +14,7 @@ import {
   Trash2,
   Sparkles,
   Type,
+  LayoutTemplate,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input, Textarea } from '@/components/ui/input'
@@ -26,6 +27,7 @@ import {
 } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
 import { THEMES, FONTS, FONT_GROUPS, getTheme } from '@/data/themes'
+import { getTemplate } from '@/templates'
 import { MARGIN_OPTIONS } from '@/data/defaultResume'
 import { cn } from '@/lib/utils'
 
@@ -74,10 +76,31 @@ const SECTION_DEFS = {
           <Field label="Start" value={v.start} onChange={(val) => onChange(i, 'start', val)} />
           <Field label="End" value={v.end} onChange={(val) => onChange(i, 'end', val)} />
         </div>
-        <Field label="Details (e.g. CGPA)" value={v.details} onChange={(val) => onChange(i, 'details', val)} />
+        <div className="grid grid-cols-2 gap-2">
+          <Field
+            label="Right Label (e.g. CGPA)"
+            value={v.rightLabel}
+            onChange={(val) => onChange(i, 'rightLabel', val)}
+          />
+          <Field
+            label="Right Value (e.g. 8.94 / 10.00)"
+            value={v.rightValue}
+            onChange={(val) => onChange(i, 'rightValue', val)}
+          />
+        </div>
+        <Field label="Details (optional)" value={v.details} onChange={(val) => onChange(i, 'details', val)} />
       </>
     ),
-    template: () => ({ degree: '', school: '', location: '', start: '', end: '', details: '' }),
+    template: () => ({
+      degree: '',
+      school: '',
+      location: '',
+      start: '',
+      end: '',
+      rightLabel: '',
+      rightValue: '',
+      details: '',
+    }),
   },
   skills: {
     title: 'Skills',
@@ -164,7 +187,7 @@ function FontGroup({ group }) {
   )
 }
 
-export default function Form({ data, onChange, onImport, onExport }) {
+export default function Form({ data, onChange, onImport, onExport, onOpenTemplates }) {
   const [openSections, setOpenSections] = useState(() =>
     Object.keys(SECTION_DEFS).reduce((acc, k) => ({ ...acc, [k]: true }), { personal: true, style: true })
   )
@@ -215,18 +238,19 @@ export default function Form({ data, onChange, onImport, onExport }) {
           onToggle={() => toggle('style')}
         >
           <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-2">
-              {['single-column', 'two-column'].map((t) => (
-                <Button
-                  key={t}
-                  type="button"
-                  variant={data.meta.template === t ? 'default' : 'outline'}
-                  onClick={() => setMeta('template', t)}
-                  className="capitalize"
-                >
-                  {t.replace('-', ' ')}
-                </Button>
-              ))}
+            <div className="flex items-center justify-between gap-3 rounded-md border border-input bg-card px-3 py-2.5 shadow-sm">
+              <div className="min-w-0">
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Template
+                </div>
+                <div className="truncate text-sm font-semibold">
+                  {getTemplate(data.meta.template).name}
+                </div>
+              </div>
+              <Button type="button" variant="outline" size="sm" onClick={onOpenTemplates}>
+                <LayoutTemplate className="h-4 w-4" />
+                Browse
+              </Button>
             </div>
 
             <FieldLabel label="Theme" icon={Palette}>

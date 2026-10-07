@@ -1,4 +1,5 @@
 import { DEFAULT_RESUME, clampMargin } from '../data/defaultResume'
+import { clampPageSize } from '../data/pageSizes'
 import { THEMES, FONTS } from '../data/themes'
 
 export function downloadJSON(data, fileName = 'resume') {
@@ -42,6 +43,7 @@ export function sanitizeResume(raw) {
       ...base.meta,
       ...(raw.meta || {}),
       themeId: THEMES.some((t) => t.id === raw.meta?.themeId) ? raw.meta.themeId : base.meta.themeId,
+      pageSize: clampPageSize(raw.meta?.pageSize, base.meta.pageSize),
       accent: typeof raw.meta?.accent === 'string' ? raw.meta.accent : base.meta.accent,
       fontHeading: FONTS.some((f) => f.id === raw.meta?.fontHeading) ? raw.meta.fontHeading : '',
       fontBody: FONTS.some((f) => f.id === raw.meta?.fontBody) ? raw.meta.fontBody : '',
@@ -50,7 +52,19 @@ export function sanitizeResume(raw) {
     },
     personal: { ...base.personal, ...(raw.personal || {}) },
     experience: Array.isArray(raw.experience) ? raw.experience : [],
-    education: Array.isArray(raw.education) ? raw.education : [],
+    education: Array.isArray(raw.education)
+      ? raw.education.map((e) => {
+          const details = typeof e?.details === 'string' ? e.details : ''
+          const splitAt = details.indexOf(':')
+          const legacyLabel = splitAt > 0 ? details.slice(0, splitAt).trim() : ''
+          const legacyValue = splitAt > 0 ? details.slice(splitAt + 1).trim() : ''
+          return {
+            ...e,
+            rightLabel: typeof e?.rightLabel === 'string' ? e.rightLabel : legacyLabel,
+            rightValue: typeof e?.rightValue === 'string' ? e.rightValue : legacyValue,
+          }
+        })
+      : [],
     skills: Array.isArray(raw.skills) ? raw.skills : [],
     projects: Array.isArray(raw.projects) ? raw.projects : [],
     certifications: Array.isArray(raw.certifications) ? raw.certifications : [],

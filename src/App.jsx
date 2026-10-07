@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FileDown, FileJson, Upload, FileText } from 'lucide-react'
+import { FileDown, FileJson, Upload, FileText, LayoutTemplate } from 'lucide-react'
 import Form from './components/Form'
-import SingleColumn from './templates/SingleColumn'
-import TwoColumn from './templates/TwoColumn'
+import TemplatePicker from './components/TemplatePicker'
+import { getTemplate } from './templates'
+import { getPageSize } from './data/pageSizes'
 import { DEFAULT_RESUME } from './data/defaultResume'
 import { downloadJSON, loadJSONFromFile, sanitizeResume } from './utils/jsonIO'
 import { Button } from './components/ui/button'
@@ -12,6 +13,7 @@ import { Toaster } from './components/ui/toaster'
 import { cn } from './lib/utils'
 
 const STORAGE_KEY = 'resume-builder-data-v7'
+const PAGE_STYLE_ID = 'resume-page-size-style'
 
 const UI_THEMES = [
   { id: 'light', name: 'Light', colors: ['#ffffff', '#e8ecf2'] },
@@ -34,6 +36,7 @@ export default function App() {
   const [data, setData] = useState(loadInitialData)
   const [toast, setToast] = useState(null)
   const [uiTheme, setUiTheme] = useState(() => localStorage.getItem('resume-builder-ui-theme') || 'light')
+  const [templateOpen, setTemplateOpen] = useState(false)
   const fileRef = useRef(null)
 
   useEffect(() => {
@@ -44,6 +47,17 @@ export default function App() {
     document.documentElement.setAttribute('data-ui-theme', uiTheme)
     localStorage.setItem('resume-builder-ui-theme', uiTheme)
   }, [uiTheme])
+
+  // Keep the printed/PDF page size in sync with the selected document size
+  useEffect(() => {
+    let styleEl = document.getElementById(PAGE_STYLE_ID)
+    if (!styleEl) {
+      styleEl = document.createElement('style')
+      styleEl.id = PAGE_STYLE_ID
+      document.head.appendChild(styleEl)
+    }
+    styleEl.textContent = `@page { size: ${getPageSize(data.meta.pageSize).printSize}; margin: 0; }`
+  }, [data.meta.pageSize])
 
   const showToast = useCallback((message, variant = 'default') => {
     setToast({ message, variant, id: Date.now() })
@@ -82,7 +96,7 @@ export default function App() {
 
   const handlePrint = () => window.print()
 
-  const Template = data.meta.template === 'single-column' ? SingleColumn : TwoColumn
+  const Template = getTemplate(data.meta.template).component
   const previewKey = `${data.meta.template}-${data.meta.themeId}`
 
   return (
@@ -126,6 +140,7 @@ export default function App() {
             onChange={setData}
             onImport={handleImportClick}
             onExport={handleExport}
+            onOpenTemplates={() => setTemplateOpen(true)}
           />
         </motion.aside>
 
@@ -147,6 +162,10 @@ export default function App() {
               />
             </div>
             <div className="toolbar-actions flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={() => setTemplateOpen(true)}>
+                <LayoutTemplate className="h-4 w-4" />
+                Templates
+              </Button>
               <Button variant="outline" size="sm" onClick={handleImportClick}>
                 <Upload className="h-4 w-4" />
                 Import
@@ -187,6 +206,12 @@ export default function App() {
         accept=".json,application/json"
         onChange={handleImportFile}
         style={{ display: 'none' }}
+      />
+      <TemplatePicker
+        open={templateOpen}
+        data={data}
+        onChange={setData}
+        onClose={() => setTemplateOpen(false)}
       />
       <Toaster toast={toast} />
     </div>

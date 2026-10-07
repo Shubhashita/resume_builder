@@ -1,17 +1,4 @@
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Globe,
-  Calendar,
-  GraduationCap,
-  Briefcase,
-  FolderGit2,
-  Wrench,
-  BadgeCheck,
-  Languages as LanguagesIcon,
-} from 'lucide-react'
-import { GithubIcon, LinkedinIcon } from '@/components/icons'
+import { Phone, Mail, MapPin, Link as LinkIcon, Calendar } from 'lucide-react'
 import { getTheme, themeToCssVars } from '@/data/themes'
 
 export default function TwoColumn({ data }) {
@@ -22,10 +9,10 @@ export default function TwoColumn({ data }) {
   const contacts = [
     personal.phone && { Icon: Phone, text: personal.phone },
     personal.email && { Icon: Mail, text: personal.email },
-    personal.location && { Icon: MapPin, text: personal.location },
-    personal.website && { Icon: Globe, text: personal.website },
-    personal.linkedin && { Icon: LinkedinIcon, text: personal.linkedin },
-    personal.github && { Icon: GithubIcon, text: personal.github },
+    personal.website && { Icon: LinkIcon, text: personal.website },
+    personal.linkedin && { Icon: LinkIcon, text: personal.linkedin },
+    personal.github && { Icon: LinkIcon, text: personal.github },
+    personal.location && { Icon: MapPin, text: personal.location, row: true },
   ].filter(Boolean)
 
   return (
@@ -36,8 +23,8 @@ export default function TwoColumn({ data }) {
           {personal.jobTitle && <p className="rs-header-title">{personal.jobTitle}</p>}
           {contacts.length > 0 && (
             <div className="rs-header-contact">
-              {contacts.map(({ Icon, text }, i) => (
-                <span key={i}>
+              {contacts.map(({ Icon, text, row }, i) => (
+                <span key={i} className={row ? 'tc2-contact-row' : undefined}>
                   <Icon className="rs-icon" />
                   {text}
                 </span>
@@ -50,32 +37,30 @@ export default function TwoColumn({ data }) {
       <div className="tc2-grid">
         <div className="tc2-main">
           {experience.length > 0 && (
-            <Section title="Experience" Icon={Briefcase}>
-              {experience.map((exp) => (
-                <Entry
-                  key={exp.id}
-                  title={exp.role}
-                  subtitle={exp.company}
-                  start={exp.start}
-                  end={exp.end}
-                  location={exp.location}
-                  bullets={exp.bullets}
-                />
+            <Section title="Experience">
+              {experience.map((exp, idx) => (
+                <div key={exp.id} className={itemClass(idx)}>
+                  <strong className="tc2-item-title">{exp.role}</strong>
+                  {exp.company && <div className="tc2-item-sub">{exp.company}</div>}
+                  <MetaRow
+                    date={exp.start ? `${exp.start} - ${exp.end}` : exp.end}
+                    location={exp.location}
+                  />
+                  <Bullets items={exp.bullets} />
+                </div>
               ))}
             </Section>
           )}
 
           {projects.length > 0 && (
-            <Section title="Projects" Icon={FolderGit2}>
-              {projects.map((p) => (
-                <Entry
-                  key={p.id}
-                  title={p.name}
-                  subtitle={p.tech}
-                  end={p.year}
-                  bullets={p.bullets}
-                  techStyle
-                />
+            <Section title="Projects">
+              {projects.map((p, idx) => (
+                <div key={p.id} className={itemClass(idx)}>
+                  <strong className="tc2-item-title">{p.name}</strong>
+                  <MetaRow date={p.year} />
+                  {p.tech && <div className="tc2-item-sub">{p.tech}</div>}
+                  <Bullets items={p.bullets} />
+                </div>
               ))}
             </Section>
           )}
@@ -84,27 +69,27 @@ export default function TwoColumn({ data }) {
         <aside className="tc2-side">
           {education.length > 0 && (
             <div className="tc2-block">
-              <h3 className="rs-section-title">
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                  <GraduationCap className="rs-icon" />
-                  Education
-                </span>
-              </h3>
-              {education.map((edu) => (
-                <div key={edu.id} className="tc2-edu">
-                  <strong>{edu.degree}</strong>
-                  <p>{edu.school}</p>
-                  <p className="rs-muted" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <Calendar className="rs-icon" />
-                    {edu.start} - {edu.end}
-                  </p>
-                  {edu.location && (
-                    <p className="rs-muted" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <MapPin className="rs-icon" />
-                      {edu.location}
-                    </p>
-                  )}
-                  {edu.details && <p>{edu.details}</p>}
+              <h3 className="rs-section-title">Education</h3>
+              {education.map((edu, idx) => (
+                <div key={edu.id} className={itemClass(idx)}>
+                  <div className="tc2-edu-top">
+                    <strong className="tc2-item-title">{edu.degree}</strong>
+                    {(edu.rightLabel || edu.rightValue) && (
+                      <div className="tc2-edu-right">
+                        {edu.rightLabel && (
+                          <div className="tc2-edu-right-label">{edu.rightLabel}</div>
+                        )}
+                        {edu.rightValue && (
+                          <div className="tc2-edu-right-value">{edu.rightValue}</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {edu.school && <div className="tc2-item-sub">{edu.school}</div>}
+                  <MetaRow
+                    date={edu.start ? `${edu.start} - ${edu.end}` : edu.end}
+                    location={edu.location}
+                  />
                 </div>
               ))}
             </div>
@@ -112,16 +97,11 @@ export default function TwoColumn({ data }) {
 
           {skills.length > 0 && (
             <div className="tc2-block">
-              <h3 className="rs-section-title">
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                  <Wrench className="rs-icon" />
-                  Skills
-                </span>
-              </h3>
-              {skills.map((s) => (
-                <div key={s.id} className="tc2-skill">
-                  <strong>{s.category}</strong>
-                  <p>{s.items}</p>
+              <h3 className="rs-section-title">Skills</h3>
+              {skills.map((s, idx) => (
+                <div key={s.id} className={itemClass(idx)}>
+                  <strong className="tc2-skill-cat">{s.category}</strong>
+                  {s.items && <p className="tc2-skill-items">{s.items}</p>}
                 </div>
               ))}
             </div>
@@ -129,12 +109,7 @@ export default function TwoColumn({ data }) {
 
           {certifications.length > 0 && (
             <div className="tc2-block">
-              <h3 className="rs-section-title">
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                  <BadgeCheck className="rs-icon" />
-                  Certifications
-                </span>
-              </h3>
+              <h3 className="rs-section-title">Certifications</h3>
               <ul className="tc2-list">
                 {certifications.map((c) => (
                   <li key={c.id}>
@@ -148,12 +123,7 @@ export default function TwoColumn({ data }) {
 
           {languages.length > 0 && (
             <div className="tc2-block">
-              <h3 className="rs-section-title">
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                  <LanguagesIcon className="rs-icon" />
-                  Languages
-                </span>
-              </h3>
+              <h3 className="rs-section-title">Languages</h3>
               <ul className="tc2-list">
                 {languages.map((l) => (
                   <li key={l.id}>
@@ -170,51 +140,47 @@ export default function TwoColumn({ data }) {
   )
 }
 
-function Section({ title, Icon, children }) {
+function itemClass(idx) {
+  return idx > 0 ? 'tc2-item tc2-item--divided' : 'tc2-item'
+}
+
+function MetaRow({ date, location }) {
+  if (!date && !location) return null
   return (
-    <section className="tc2-section">
-      <h2 className="rs-section-title">
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-          {Icon && <Icon className="rs-icon" />}
-          {title}
+    <div className="tc2-meta-row">
+      {date && (
+        <span className="tc2-meta">
+          <Calendar className="rs-icon" />
+          {date}
         </span>
-      </h2>
-      {children}
-    </section>
+      )}
+      {location && (
+        <span className="tc2-meta">
+          <MapPin className="rs-icon" />
+          {location}
+        </span>
+      )}
+    </div>
   )
 }
 
-function Entry({ title, subtitle, start, end, location, bullets, techStyle }) {
-  const hasDate = start || end
+function Bullets({ items }) {
+  const list = (items || []).filter(Boolean)
+  if (!list.length) return null
   return (
-    <div className="rs-entry">
-      <div className="rs-entry-top">
-        <strong>{title}</strong>
-        {(hasDate || location) && (
-          <div className="rs-entry-right">
-            {hasDate && (
-              <div className="rs-date">
-                <Calendar className="rs-icon" />
-                {start ? `${start} - ${end}` : end}
-              </div>
-            )}
-            {location && (
-              <div className="rs-loc">
-                <MapPin className="rs-icon" />
-                {location}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-      {subtitle && <div className={techStyle ? 'rs-tech' : 'rs-entry-sub'}>{subtitle}</div>}
-      {bullets?.length > 0 && (
-        <ul className="rs-bullets">
-          {bullets.filter(Boolean).map((b, i) => (
-            <li key={i}>{b}</li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <ul className="rs-bullets">
+      {list.map((b, i) => (
+        <li key={i}>{b}</li>
+      ))}
+    </ul>
+  )
+}
+
+function Section({ title, children }) {
+  return (
+    <section className="tc2-section">
+      <h2 className="rs-section-title">{title}</h2>
+      {children}
+    </section>
   )
 }

@@ -1,3 +1,5 @@
+import { getPageSize } from './pageSizes'
+
 export const THEMES = [
   {
     id: 'modern-blue',
@@ -126,7 +128,10 @@ export function getTheme(id) {
 export function themeToCssVars(theme, data) {
   const bodyFont = getFont(data.meta.fontBody)
   const headingFont = getFont(data.meta.fontHeading)
+  const page = getPageSize(data.meta.pageSize)
   return {
+    '--page-w': `${page.widthMm}mm`,
+    '--page-h': `${page.heightMm}mm`,
     '--font-body': bodyFont ? bodyFont.css : theme.fontBody,
     '--font-heading': headingFont ? headingFont.css : theme.fontHeading,
     '--accent': data.meta.accent || theme.accent,
