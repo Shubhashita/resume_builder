@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FileDown, FileJson, Upload, FileText, LayoutTemplate, Palette } from 'lucide-react'
+import { FileDown, FileJson, Upload, FileText, LayoutTemplate, Palette, ChevronDown, User, ArrowUpDown } from 'lucide-react'
 import Form from './components/Form'
 import TemplateSidebar from './components/TemplateSidebar'
 import DesignSidebar from './components/DesignSidebar'
@@ -102,15 +102,69 @@ export default function App() {
 
   return (
     <div className="app flex h-screen flex-col bg-background text-foreground">
-      <div className="app-body flex min-h-0 flex-1">
-        {/* Editor */}
-        <motion.aside
-          initial={{ x: -40, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="editor-pane w-[400px] min-w-[340px] shrink-0 flex flex-col border-r bg-card overflow-hidden"
-        >
-          <AnimatePresence mode="wait">
+      {/* Top Rows */}
+      <div className="flex flex-col border-b border-slate-200/80 bg-slate-50/50 backdrop-blur-sm w-full shrink-0">
+        {/* Row 1 */}
+        <div className="h-11 border-b border-slate-200/80 flex items-center justify-between px-4">
+          <div className="flex items-center gap-2">
+            <button className="flex items-center gap-1 font-semibold text-sm hover:bg-slate-200/50 px-2 py-1.5 rounded-lg transition-all text-slate-700">
+              Home <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
+            </button>
+            <div className="w-px h-4 bg-slate-200 mx-1" />
+            <div className="flex items-center gap-2 px-2.5 py-1 border border-slate-200 shadow-sm rounded-md min-w-[240px] bg-white hover:border-slate-300 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-400/20 transition-all cursor-text">
+              <FileText className="h-3.5 w-3.5 text-slate-400" />
+              <input
+                value={data.meta.fileName || ''}
+                onChange={(e) => setData({ ...data, meta: { ...data.meta, fileName: e.target.value } })}
+                placeholder="resume"
+                className="bg-transparent border-none outline-none text-[13px] w-full font-medium text-slate-700 placeholder:text-slate-400"
+              />
+            </div>
+          </div>
+          <div className="flex items-center">
+            <button className="flex items-center gap-1 text-slate-500 hover:text-slate-800 transition-colors group">
+              <div className="h-7 w-7 rounded-full bg-slate-400 flex items-center justify-center text-white shadow-sm group-hover:bg-slate-500 transition-colors">
+                <User className="h-4 w-4" />
+              </div>
+              <ChevronDown className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+        {/* Row 2 */}
+        <div className="h-9 flex items-center justify-center px-4 gap-2 text-[13px] font-medium">
+          <button className="flex items-center gap-1.5 hover:text-slate-900 hover:bg-slate-100/80 px-3 py-1.5 rounded-md transition-all text-slate-600">
+            <ArrowUpDown className="h-3.5 w-3.5" />
+            Rearrange
+          </button>
+          <button
+            className="flex items-center gap-1.5 hover:text-slate-900 hover:bg-slate-100/80 px-3 py-1.5 rounded-md transition-all text-slate-600"
+            onClick={() => setSidebarMode('templates')}
+          >
+            <LayoutTemplate className="h-3.5 w-3.5" />
+            Templates
+          </button>
+          <button
+            className="flex items-center gap-1.5 hover:text-slate-900 hover:bg-slate-100/80 px-3 py-1.5 rounded-md transition-all text-slate-600"
+            onClick={() => setSidebarMode('design')}
+          >
+            <Palette className="h-3.5 w-3.5" />
+            Design & Font
+          </button>
+        </div>
+      </div>
+
+      <div className="app-body flex min-h-0 flex-1 overflow-hidden relative">
+        {/* Sidebar */}
+        <AnimatePresence>
+          {(sidebarMode === 'templates' || sidebarMode === 'design') && (
+            <motion.aside
+              initial={{ x: -260, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -260, opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="editor-pane absolute top-0 bottom-0 left-0 z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] w-[260px] flex flex-col border-r border-slate-200/80 bg-white overflow-hidden"
+            >
+              <AnimatePresence mode="wait">
             {sidebarMode === 'templates' ? (
               <motion.div
                 key="templates"
@@ -186,7 +240,9 @@ export default function App() {
               </motion.div>
             )}
           </AnimatePresence>
-        </motion.aside>
+            </motion.aside>
+          )}
+        </AnimatePresence>
 
         {/* Preview */}
         <main className="main-pane flex min-w-0 flex-1 flex-col">
@@ -194,6 +250,7 @@ export default function App() {
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
+            style={{ display: 'none' }}
             className="toolbar no-print flex items-center gap-3 border-b bg-card px-4 py-2.5"
           >
             <div className="flex flex-1 items-center gap-2">

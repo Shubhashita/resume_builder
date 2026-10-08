@@ -1,5 +1,5 @@
 export const PAGE_SIZES = [
-  { id: 'a4', name: 'A4', widthMm: 210, heightMm: 297, printSize: 'A4' },
+  { id: 'a4', name: 'A4 (Wider)', widthMm: 230, heightMm: 297, printSize: 'A4' },
   { id: 'letter', name: 'US Letter', widthMm: 215.9, heightMm: 279.4, printSize: 'US-Letter' },
 ]
 

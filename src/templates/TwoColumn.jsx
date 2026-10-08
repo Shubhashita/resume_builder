@@ -69,7 +69,7 @@ export default function TwoColumn({ data, onChange }) {
         </header>
       </div>
 
-      <div className="tc2-grid">
+      <div className="tc2-grid" style={{ gridTemplateColumns: vars['--col-layout'] }}>
         <div className="tc2-main">
           {experience.length > 0 && (
             <Section title="Experience">
@@ -145,7 +145,7 @@ export default function TwoColumn({ data, onChange }) {
                   {p.tech && (
                     <EditableField
                       tagName="div"
-                      className="tc2-item-sub"
+                      className="tc2-item-tech"
                       value={p.tech}
                       onChange={(val) => {
                         const newProj = [...projects]; newProj[idx].tech = val;
@@ -286,6 +286,7 @@ export default function TwoColumn({ data, onChange }) {
                   <HoverBlock
                     key={c.id}
                     tagName="li"
+                    className={itemClass(idx)}
                     onMoveUp={() => moveItem('certifications', idx, -1)}
                     onMoveDown={() => moveItem('certifications', idx, 1)}
                     onDelete={() => deleteItem('certifications', idx)}
@@ -322,6 +323,7 @@ export default function TwoColumn({ data, onChange }) {
                   <HoverBlock
                     key={l.id}
                     tagName="li"
+                    className={itemClass(idx)}
                     onMoveUp={() => moveItem('languages', idx, -1)}
                     onMoveDown={() => moveItem('languages', idx, 1)}
                     onDelete={() => deleteItem('languages', idx)}

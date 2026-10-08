@@ -129,6 +129,12 @@ export function themeToCssVars(theme, data) {
   const bodyFont = getFont(data.meta.fontBody)
   const headingFont = getFont(data.meta.fontHeading)
   const page = getPageSize(data.meta.pageSize)
+
+  let colLayout = '1fr 30%'
+  if (data.meta.template === 'two-column-75') colLayout = '1fr 25%'
+  else if (data.meta.template === 'two-column-55') colLayout = '1fr 45%'
+  else if (data.meta.template === 'two-column-50') colLayout = '1fr 50%'
+
   return {
     '--page-w': `${page.widthMm}mm`,
     '--page-h': `${page.heightMm}mm`,
@@ -141,5 +147,9 @@ export function themeToCssVars(theme, data) {
     '--name-size': theme.nameSize,
     '--margin-v': `${data.meta.marginV ?? 10}mm`,
     '--margin-h': `${data.meta.marginH ?? 10}mm`,
+    '--section-space': `${(data.meta.sectionSpacing || 3) * 4}px`,
+    '--item-space': `${(data.meta.sectionSpacing || 3) * 3}px`,
+    '--col-layout': colLayout,
   }
 }
+

@@ -21,8 +21,8 @@ function CustomSlider({ label, value, min, max, onChange, leftText, rightText, l
     <div className="space-y-3">
       {label && <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{label}</div>}
       <div className="px-1">
-        <div className="flex items-center gap-3">
-          <span className="text-slate-500 font-medium text-sm mb-1 leading-none whitespace-nowrap">{leftSide}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-slate-500 font-medium text-[11px] mb-1 leading-none whitespace-nowrap">{leftSide}</span>
           <div className="flex-1 relative h-6 flex items-center">
              <input 
               type="range" 
@@ -40,19 +40,19 @@ function CustomSlider({ label, value, min, max, onChange, leftText, rightText, l
             </div>
             {/* custom thumb */}
             <div 
-              className="absolute h-6 w-[18px] bg-emerald-400 rounded-full border-[3px] border-emerald-50 shadow-md pointer-events-none flex items-center justify-center transition-all"
+              className="absolute h-5 w-[14px] bg-emerald-400 rounded-full border-2 border-emerald-50 shadow-md pointer-events-none flex items-center justify-center transition-all"
               style={{ left: `calc(${((value - min) / (max - min)) * 100}%)`, transform: 'translateX(-50%)' }}
             >
               <div className="flex gap-[2px]">
-                 <div className="w-[1px] h-2 bg-white rounded-full opacity-90" />
-                 <div className="w-[1px] h-2 bg-white rounded-full opacity-90" />
+                 <div className="w-[1px] h-1.5 bg-white rounded-full opacity-90" />
+                 <div className="w-[1px] h-1.5 bg-white rounded-full opacity-90" />
               </div>
             </div>
           </div>
-          <span className="text-slate-500 font-medium text-sm mb-1 leading-none whitespace-nowrap">{rightSide}</span>
+          <span className="text-slate-500 font-medium text-[11px] mb-1 leading-none whitespace-nowrap">{rightSide}</span>
         </div>
         {(leftText || rightText) && (
-          <div className="flex justify-between mt-1 text-xs text-slate-500 font-medium">
+          <div className="flex justify-between mt-1 text-[10px] text-slate-400 font-medium">
             <span>{leftText}</span>
             <span>{rightText}</span>
           </div>
@@ -77,14 +77,14 @@ export default function DesignSidebar({ data, onChange, onContinue }) {
 
   return (
     <div className="flex h-full flex-col bg-white overflow-hidden w-full">
-      <div className="sticky top-0 z-10 flex items-center justify-between bg-white px-5 py-4">
-        <h2 className="text-[15px] font-medium text-slate-800">Design & Font</h2>
-        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100" onClick={onContinue}>
-          <X className="h-5 w-5" />
+      <div className="sticky top-0 z-10 flex items-center justify-center bg-white px-4 py-3">
+        <h2 className="text-sm font-medium text-slate-800">Design & Font</h2>
+        <Button variant="ghost" size="icon" className="absolute right-3 h-7 w-7 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100" onClick={onContinue}>
+          <X className="h-3.5 w-3.5" />
         </Button>
       </div>
       
-      <div className="flex-1 overflow-y-auto px-5 space-y-6 pb-20">
+      <div className="flex-1 overflow-y-auto px-4 space-y-5 pb-10">
         
         {/* PAGE MARGINS */}
         <CustomSlider 
@@ -99,11 +99,11 @@ export default function DesignSidebar({ data, onChange, onContinue }) {
 
         {/* SECTION SPACING */}
         <CustomSlider 
-          label="Section Spacing: 1" 
-          value={1} 
+          label={`Section Spacing: ${data.meta.sectionSpacing || 3}`} 
+          value={data.meta.sectionSpacing || 3} 
           min={1} 
           max={7} 
-          onChange={(v) => {}}
+          onChange={(v) => onChange({ ...data, meta: { ...data.meta, sectionSpacing: v } })}
           leftText="compact"
           rightText="more space"
         />
@@ -113,7 +113,7 @@ export default function DesignSidebar({ data, onChange, onContinue }) {
         {/* COLORS */}
         <div className="space-y-3">
           <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Colors</div>
-          <div className="flex flex-wrap gap-2.5">
+          <div className="flex flex-wrap gap-2">
             {COLORS.map((c, i) => {
               const active = data.meta.accent === c || (!data.meta.accent && i === 0);
               return (
@@ -121,7 +121,7 @@ export default function DesignSidebar({ data, onChange, onContinue }) {
                   key={c}
                   onClick={() => setAccent(c)}
                   className={cn(
-                    "w-9 h-9 rounded-full border-[5px] border-[#1a1a1a] relative transition-transform hover:scale-105 shadow-sm",
+                    "w-7 h-7 rounded-full border-[3px] border-[#1a1a1a] relative transition-transform hover:scale-105 shadow-sm",
                   )}
                   style={{ backgroundColor: c }}
                 >
@@ -133,8 +133,8 @@ export default function DesignSidebar({ data, onChange, onContinue }) {
                 </button>
               )
             })}
-            <button className="w-9 h-9 rounded-full bg-emerald-400 flex items-center justify-center hover:bg-emerald-500 transition-colors shadow-sm">
-               <Plus className="w-5 h-5 text-white" />
+            <button className="w-7 h-7 rounded-full bg-emerald-400 flex items-center justify-center hover:bg-emerald-500 transition-colors shadow-sm">
+               <Plus className="w-4 h-4 text-white" />
             </button>
           </div>
         </div>
@@ -148,12 +148,12 @@ export default function DesignSidebar({ data, onChange, onContinue }) {
             value={data.meta.fontBody || 'rubik'} 
             onValueChange={setFont}
           >
-            <SelectTrigger className="w-full text-base h-11 border-slate-200">
+            <SelectTrigger className="w-full text-sm h-9 border-slate-200">
               <SelectValue placeholder="Select font" />
             </SelectTrigger>
             <SelectContent>
               {FONTS.map(f => (
-                <SelectItem key={f.id} value={f.id} style={{ fontFamily: f.css }}>
+                <SelectItem key={f.id} value={f.id} style={{ fontFamily: f.css }} className="text-sm">
                   {f.name}
                 </SelectItem>
               ))}
@@ -162,23 +162,29 @@ export default function DesignSidebar({ data, onChange, onContinue }) {
         </div>
 
         {/* FONT SIZE */}
-        <CustomSlider 
-          label="Font Size: Medium" 
-          value={3} 
-          min={1} 
-          max={5} 
-          onChange={(v) => {}}
-          leftSide="- A"
-          rightSide="+ A"
-        />
+        {(() => {
+          const sizes = ['Small', 'Medium-Small', 'Medium', 'Medium-Large', 'Large'];
+          const val = data.meta.fontSize || 3;
+          return (
+            <CustomSlider 
+              label={`Font Size: ${sizes[val - 1]}`} 
+              value={val} 
+              min={1} 
+              max={5} 
+              onChange={(v) => onChange({ ...data, meta: { ...data.meta, fontSize: v } })}
+              leftSide="- A"
+              rightSide="+ A"
+            />
+          )
+        })()}
 
         {/* LINE HEIGHT */}
         <CustomSlider 
-          label="Line Height: 1" 
-          value={2} 
+          label={`Line Height: ${data.meta.lineHeight || 2}`} 
+          value={data.meta.lineHeight || 2} 
           min={1} 
           max={5} 
-          onChange={(v) => {}}
+          onChange={(v) => onChange({ ...data, meta: { ...data.meta, lineHeight: v } })}
           leftText="condensed"
           rightText="spacious"
         />
@@ -188,42 +194,41 @@ export default function DesignSidebar({ data, onChange, onContinue }) {
         {/* COLUMN LAYOUT */}
         <div className="space-y-3">
           <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Column Layout:</div>
-          <div className="flex gap-2.5">
-            {/* Box 1: Single */}
-            <button onClick={() => setTemplate('single-column')} className="flex flex-col items-center gap-1.5 group">
-              <div className={cn("w-[42px] h-[52px] border p-1 flex gap-1 bg-white transition-colors", data.meta.template === 'single-column' ? 'border-emerald-500' : 'border-slate-200 group-hover:border-slate-300')}>
-                 <div className="bg-slate-200 h-full flex-1 rounded-[1px]" />
+          <div className="flex gap-2">
+            {/* Box 1: 75/25 */}
+            <button onClick={() => setTemplate('two-column-75')} className="flex flex-col items-center gap-1 group">
+              <div className={cn("w-[36px] h-[46px] border p-1 flex justify-between bg-white transition-colors", data.meta.template === 'two-column-75' ? 'border-emerald-500' : 'border-slate-200 group-hover:border-slate-300')}>
+                 <div className="bg-slate-200/60 h-full rounded-[1px]" style={{ width: 18 }} />
+                 <div className={cn("h-full rounded-[1px]", data.meta.template === 'two-column-75' ? 'bg-emerald-400' : 'bg-slate-300/80')} style={{ width: 6 }} />
               </div>
-              <span className="text-[11px] font-medium text-slate-600">1</span>
+              <span className="text-[10px] font-medium text-slate-600">1</span>
             </button>
 
-            {/* Box 2: Two Column (active style) */}
-            <button onClick={() => setTemplate('two-column')} className="flex flex-col items-center gap-1.5 group">
-              <div className={cn("w-[42px] h-[52px] border p-1 flex gap-1 bg-white transition-colors", data.meta.template === 'two-column' ? 'border-emerald-500' : 'border-slate-200 group-hover:border-slate-300')}>
-                 <div className="bg-slate-100 h-full w-[60%] rounded-[1px]" />
-                 <div className="bg-emerald-400 h-full w-[40%] rounded-[1px] flex flex-col gap-[2px] p-[1.5px]">
-                     <div className="bg-emerald-600 h-1.5 w-full rounded-[0.5px] opacity-70" />
-                 </div>
+            {/* Box 2: 65/35 (Active Default) */}
+            <button onClick={() => setTemplate('two-column')} className="flex flex-col items-center gap-1 group">
+              <div className={cn("w-[36px] h-[46px] border p-1 flex justify-between bg-white transition-colors", data.meta.template === 'two-column' || !data.meta.template ? 'border-emerald-500' : 'border-slate-200 group-hover:border-slate-300')}>
+                 <div className="bg-slate-200/60 h-full rounded-[1px]" style={{ width: 16 }} />
+                 <div className={cn("h-full rounded-[1px]", data.meta.template === 'two-column' || !data.meta.template ? 'bg-emerald-400' : 'bg-slate-300/80')} style={{ width: 8 }} />
               </div>
-              <span className="text-[11px] font-medium text-slate-600">2</span>
+              <span className="text-[10px] font-medium text-slate-600">2</span>
             </button>
 
-            {/* Box 3: Three Dummy */}
-            <button className="flex flex-col items-center gap-1.5 group opacity-60">
-              <div className="w-[42px] h-[52px] border border-slate-200 p-1 flex gap-1 bg-white">
-                 <div className="bg-slate-100 h-full w-[40%] rounded-[1px]" />
-                 <div className="bg-slate-200 h-full w-[60%] rounded-[1px]" />
+            {/* Box 3: 55/45 */}
+            <button onClick={() => setTemplate('two-column-55')} className="flex flex-col items-center gap-1 group">
+              <div className={cn("w-[36px] h-[46px] border p-1 flex justify-between bg-white transition-colors", data.meta.template === 'two-column-55' ? 'border-emerald-500' : 'border-slate-200 group-hover:border-slate-300')}>
+                 <div className="bg-slate-200/60 h-full rounded-[1px]" style={{ width: 14 }} />
+                 <div className={cn("h-full rounded-[1px]", data.meta.template === 'two-column-55' ? 'bg-emerald-400' : 'bg-slate-300/80')} style={{ width: 10 }} />
               </div>
-              <span className="text-[11px] font-medium text-slate-600">3</span>
+              <span className="text-[10px] font-medium text-slate-600">3</span>
             </button>
 
-            {/* Box 4: Four Dummy */}
-            <button className="flex flex-col items-center gap-1.5 group opacity-60">
-              <div className="w-[42px] h-[52px] border border-slate-200 p-1 flex gap-1 bg-white">
-                 <div className="bg-slate-100 h-full w-[50%] rounded-[1px]" />
-                 <div className="bg-slate-200 h-full w-[50%] rounded-[1px]" />
+            {/* Box 4: 50/50 */}
+            <button onClick={() => setTemplate('two-column-50')} className="flex flex-col items-center gap-1 group">
+              <div className={cn("w-[36px] h-[46px] border p-1 flex justify-between bg-white transition-colors", data.meta.template === 'two-column-50' ? 'border-emerald-500' : 'border-slate-200 group-hover:border-slate-300')}>
+                 <div className="bg-slate-200/60 h-full rounded-[1px]" style={{ width: 12 }} />
+                 <div className={cn("h-full rounded-[1px]", data.meta.template === 'two-column-50' ? 'bg-emerald-400' : 'bg-slate-300/80')} style={{ width: 12 }} />
               </div>
-              <span className="text-[11px] font-medium text-slate-600">4</span>
+              <span className="text-[10px] font-medium text-slate-600">4</span>
             </button>
           </div>
         </div>
