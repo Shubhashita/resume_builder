@@ -14,7 +14,7 @@ import { Input } from './components/ui/input'
 import { Toaster } from './components/ui/toaster'
 import { cn } from './lib/utils'
 
-const STORAGE_KEY = 'resume-builder-data-v7'
+const STORAGE_KEY = 'resume-builder-data-v8'
 const PAGE_STYLE_ID = 'resume-page-size-style'
 
 const UI_THEMES = [
