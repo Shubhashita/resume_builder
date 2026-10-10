@@ -62,8 +62,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ===== UI theme presets (app chrome — resume page stays paper-white) ===== */
-[data-ui-theme='beige'] {
+/* ===== UI theme presets (app chrome - resume page stays paper-white) ===== */
+[data-ui-theme="beige"] {
   --background: #f4ecdd;
   --foreground: #3d3222;
   --card: #fffdf6;
@@ -84,7 +84,7 @@ body {
   --ring: #c2a16b;
 }
 
-[data-ui-theme='blue'] {
+[data-ui-theme="blue"] {
   --background: #eaf0fa;
   --foreground: #16233d;
   --card: #ffffff;
@@ -105,7 +105,7 @@ body {
   --ring: #6d9bec;
 }
 
-[data-ui-theme='dark'] {
+[data-ui-theme="dark"] {
   --background: #0e1322;
   --foreground: #e7ecf5;
   --card: #151c2f;

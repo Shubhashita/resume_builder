@@ -189,49 +189,7 @@ export default function DesignSidebar({ data, onChange, onContinue }) {
           rightText="spacious"
         />
 
-        <hr className="border-slate-100" />
 
-        {/* COLUMN LAYOUT */}
-        <div className="space-y-3">
-          <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Column Layout:</div>
-          <div className="flex gap-2">
-            {/* Box 1: 75/25 */}
-            <button onClick={() => setTemplate('two-column-75')} className="flex flex-col items-center gap-1 group">
-              <div className={cn("w-[36px] h-[46px] border p-1 flex justify-between bg-white transition-colors", data.meta.template === 'two-column-75' ? 'border-emerald-500' : 'border-slate-200 group-hover:border-slate-300')}>
-                 <div className="bg-slate-200/60 h-full rounded-[1px]" style={{ width: 18 }} />
-                 <div className={cn("h-full rounded-[1px]", data.meta.template === 'two-column-75' ? 'bg-emerald-400' : 'bg-slate-300/80')} style={{ width: 6 }} />
-              </div>
-              <span className="text-[10px] font-medium text-slate-600">1</span>
-            </button>
-
-            {/* Box 2: 65/35 (Active Default) */}
-            <button onClick={() => setTemplate('two-column')} className="flex flex-col items-center gap-1 group">
-              <div className={cn("w-[36px] h-[46px] border p-1 flex justify-between bg-white transition-colors", data.meta.template === 'two-column' || !data.meta.template ? 'border-emerald-500' : 'border-slate-200 group-hover:border-slate-300')}>
-                 <div className="bg-slate-200/60 h-full rounded-[1px]" style={{ width: 16 }} />
-                 <div className={cn("h-full rounded-[1px]", data.meta.template === 'two-column' || !data.meta.template ? 'bg-emerald-400' : 'bg-slate-300/80')} style={{ width: 8 }} />
-              </div>
-              <span className="text-[10px] font-medium text-slate-600">2</span>
-            </button>
-
-            {/* Box 3: 55/45 */}
-            <button onClick={() => setTemplate('two-column-55')} className="flex flex-col items-center gap-1 group">
-              <div className={cn("w-[36px] h-[46px] border p-1 flex justify-between bg-white transition-colors", data.meta.template === 'two-column-55' ? 'border-emerald-500' : 'border-slate-200 group-hover:border-slate-300')}>
-                 <div className="bg-slate-200/60 h-full rounded-[1px]" style={{ width: 14 }} />
-                 <div className={cn("h-full rounded-[1px]", data.meta.template === 'two-column-55' ? 'bg-emerald-400' : 'bg-slate-300/80')} style={{ width: 10 }} />
-              </div>
-              <span className="text-[10px] font-medium text-slate-600">3</span>
-            </button>
-
-            {/* Box 4: 50/50 */}
-            <button onClick={() => setTemplate('two-column-50')} className="flex flex-col items-center gap-1 group">
-              <div className={cn("w-[36px] h-[46px] border p-1 flex justify-between bg-white transition-colors", data.meta.template === 'two-column-50' ? 'border-emerald-500' : 'border-slate-200 group-hover:border-slate-300')}>
-                 <div className="bg-slate-200/60 h-full rounded-[1px]" style={{ width: 12 }} />
-                 <div className={cn("h-full rounded-[1px]", data.meta.template === 'two-column-50' ? 'bg-emerald-400' : 'bg-slate-300/80')} style={{ width: 12 }} />
-              </div>
-              <span className="text-[10px] font-medium text-slate-600">4</span>
-            </button>
-          </div>
-        </div>
 
       </div>
     </div>

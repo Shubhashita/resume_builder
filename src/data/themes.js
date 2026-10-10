@@ -135,6 +135,12 @@ export function themeToCssVars(theme, data) {
   else if (data.meta.template === 'two-column-55') colLayout = '1fr 45%'
   else if (data.meta.template === 'two-column-50') colLayout = '1fr 50%'
 
+  const fontScales = [0.85, 0.92, 1, 1.08, 1.15]
+  const lineHeights = [1.2, 1.3, 1.42, 1.6, 1.8]
+  
+  const currentFontScale = data.meta.fontSize ? fontScales[data.meta.fontSize - 1] : 1
+  const currentLineHeight = data.meta.lineHeight ? lineHeights[data.meta.lineHeight - 1] : 1.42
+
   return {
     '--page-w': `${page.widthMm}mm`,
     '--page-h': `${page.heightMm}mm`,
@@ -144,12 +150,14 @@ export function themeToCssVars(theme, data) {
     '--heading-transform': theme.headingTransform,
     '--heading-weight': theme.headingWeight,
     '--heading-spacing': theme.headingSpacing,
-    '--name-size': theme.nameSize,
+    '--name-size': `calc(${theme.nameSize} * ${currentFontScale})`,
     '--margin-v': `${data.meta.marginV ?? 10}mm`,
     '--margin-h': `${data.meta.marginH ?? 10}mm`,
     '--section-space': `${(data.meta.sectionSpacing || 3) * 4}px`,
     '--item-space': `${(data.meta.sectionSpacing || 3) * 3}px`,
     '--col-layout': colLayout,
+    '--font-scale': currentFontScale,
+    '--line-height': currentLineHeight,
   }
 }
 

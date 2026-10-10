@@ -14,8 +14,8 @@
   background: #ffffff;
   color: #1a1a1a;
   font-family: var(--font-body);
-  font-size: 10pt;
-  line-height: 1.42;
+  font-size: calc(10pt * var(--font-scale, 1));
+  line-height: var(--line-height, 1.42);
 }
 
 .rs-icon {
@@ -47,7 +47,7 @@
 }
 
 .rs-entry-top strong {
-  font-size: 10.5pt;
+  font-size: 1.05em;
   font-weight: 700;
 }
 
@@ -61,7 +61,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 4px;
-  font-size: 9pt;
+  font-size: 0.9em;
   color: #333;
   white-space: nowrap;
 }
@@ -71,19 +71,19 @@
   align-items: center;
   justify-content: flex-end;
   gap: 4px;
-  font-size: 8.5pt;
+  font-size: 0.85em;
   color: #666;
   margin-top: 1px;
 }
 
 .rs-entry-sub {
-  font-size: 9.5pt;
+  font-size: 0.95em;
   color: #333;
   margin: 1px 0 3px;
 }
 
 .rs-tech {
-  font-size: 8.8pt;
+  font-size: 0.88em;
   color: #555;
   font-style: italic;
   margin: 1px 0 3px;
@@ -105,7 +105,7 @@
 .rs-section-title {
   margin: 0 0 7px;
   font-family: var(--font-heading);
-  font-size: 10pt;
+  font-size: 1em;
   font-weight: var(--heading-weight);
   text-transform: var(--heading-transform);
   letter-spacing: var(--heading-spacing);
@@ -134,7 +134,7 @@
 
 .rs-header-title {
   margin: 2px 0 6px;
-  font-size: 14pt;
+  font-size: 1.4em;
   font-weight: 500;
   color: var(--accent);
 }
@@ -143,7 +143,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 4px 14px;
-  font-size: 9pt;
+  font-size: 0.9em;
   color: #111;
 }
 
@@ -170,7 +170,7 @@
 }
 
 .rs-skill-row {
-  font-size: 9.5pt;
+  font-size: 0.95em;
 }
 
 .rs-skill-row strong {
@@ -216,7 +216,7 @@
 }
 
 .resume-two .rs-section-title {
-  font-size: 15pt;
+  font-size: 1.5em;
   font-weight: 600;
   text-transform: uppercase;
   margin-bottom: 8px;
@@ -249,20 +249,20 @@
 
 .tc2-item-title {
   display: block;
-  font-size: 13pt;
+  font-size: 1.3em;
   font-weight: 600;
   color: #000;
   line-height: 1.2;
 }
 
 .tc2-item-sub {
-  font-size: 11.5pt;
+  font-size: 1.15em;
   color: var(--accent);
   margin-top: 1px;
 }
 
 .tc2-item-tech {
-  font-size: 9.5pt;
+  font-size: 0.95em;
   color: #555;
   margin-top: 1px;
 }
@@ -278,7 +278,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 8.8pt;
+  font-size: 0.88em;
   color: #666;
 }
 
@@ -311,13 +311,13 @@
 }
 
 .tc2-edu-right-label {
-  font-size: 8pt;
+  font-size: 0.8em;
   color: #777;
   line-height: 1.2;
 }
 
 .tc2-edu-right-value {
-  font-size: 9.5pt;
+  font-size: 0.95em;
   font-weight: 700;
   color: var(--accent);
   line-height: 1.2;
@@ -326,7 +326,7 @@
 /* Skills — dynamic category headings, title case, dark */
 .tc2-skill-cat {
   display: block;
-  font-size: 11.5pt;
+  font-size: 1.15em;
   font-weight: 600;
   color: var(--accent);
   margin-bottom: 1px;
@@ -334,7 +334,7 @@
 
 .tc2-skill-items {
   margin: 0;
-  font-size: 9pt;
+  font-size: 0.9em;
   color: #555;
 }
 
@@ -342,7 +342,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  font-size: 8.7pt;
+  font-size: 0.87em;
 }
 
 .tc2-list li {
@@ -351,7 +351,7 @@
 
 .tc2-list li strong {
   display: block;
-  font-size: 9pt;
+  font-size: 0.9em;
 }
 
 /* ===== Print / PDF export ===== */
@@ -365,6 +365,8 @@
   body {
     background: #fff !important;
     height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .no-print {
@@ -380,11 +382,24 @@
     height: auto !important;
     padding: 0 !important;
     margin: 0 !important;
+    background: transparent !important;
+  }
+
+  /* Reset the inner flex wrappers in preview-scroll so they don't center the resume and add margins */
+  .preview-scroll>div,
+  .preview-scroll>div>div {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
   }
 
   .editor-pane,
   .toolbar,
-  .toast {
+  .toast,
+  .floating-toolbar {
     display: none !important;
   }
 
@@ -393,7 +408,10 @@
     width: auto !important;
     min-height: auto !important;
     margin: 0 !important;
+    padding: 0 !important;
     outline: none !important;
+    transform: none !important;
+    /* Force override framer-motion inline styles */
   }
 
   .resume {
@@ -401,6 +419,7 @@
     min-height: var(--page-h, 297mm) !important;
     box-shadow: none !important;
     margin: 0 !important;
+    padding: 0 !important;
   }
 }
 
@@ -415,7 +434,7 @@
 }
 
 .tc2-edu-right-label {
-  font-size: 8pt;
+  font-size: 0.8em;
   text-transform: uppercase;
   color: #777;
   margin-bottom: 2px;
@@ -423,17 +442,17 @@
 }
 
 .tc2-edu-right-value {
-  font-size: 9.5pt;
+  font-size: 0.95em;
   font-weight: 600;
   color: var(--accent);
 }
 
 .tc2-side .tc2-item-title {
-  font-size: 10pt;
+  font-size: 1em;
   line-height: 1.35;
 }
 
 .tc2-side .tc2-item-sub {
-  font-size: 9pt;
+  font-size: 0.9em;
   line-height: 1.35;
 }

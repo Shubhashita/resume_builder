@@ -78,15 +78,7 @@ export default function Form({ data, onChange, onImport, onExport, onOpenTemplat
       animate="show"
       className="space-y-3 p-4"
     >
-      {/* Import / Export */}
-      <motion.div variants={item} className="grid grid-cols-2 gap-2">
-        <Button variant="outline" onClick={onImport} className="w-full">
-          Import JSON
-        </Button>
-        <Button variant="secondary" onClick={onExport} className="w-full">
-          Export JSON
-        </Button>
-      </motion.div>
+
 
 
 

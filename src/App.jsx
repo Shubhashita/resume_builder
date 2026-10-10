@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FileDown, FileJson, Upload, FileText, LayoutTemplate, Palette, ChevronDown, User, ArrowUpDown } from 'lucide-react'
+import { FileDown, FileJson, Upload, FileText, LayoutTemplate, Palette, ChevronDown, User, ArrowUpDown, Eye, Link2 } from 'lucide-react'
 import Form from './components/Form'
 import TemplateSidebar from './components/TemplateSidebar'
 import DesignSidebar from './components/DesignSidebar'
+import FloatingToolbar from './components/FloatingToolbar'
 import { getTemplate } from './templates'
 import { getPageSize } from './data/pageSizes'
 import { DEFAULT_RESUME } from './data/defaultResume'
@@ -25,6 +26,11 @@ const UI_THEMES = [
 
 function loadInitialData() {
   try {
+    const params = new URLSearchParams(window.location.search);
+    const dataParam = params.get('data');
+    if (dataParam) {
+      return sanitizeResume(JSON.parse(decodeURIComponent(atob(dataParam))));
+    }
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved) return sanitizeResume(JSON.parse(saved))
   } catch {
@@ -95,61 +101,62 @@ export default function App() {
     [showToast]
   )
 
-  const handlePrint = () => window.print()
+  const handleDownloadPDF = useCallback(() => {
+    window.print()
+  }, [])
 
   const Template = getTemplate(data.meta.template).component
   const previewKey = `${data.meta.template}-${data.meta.themeId}`
 
   return (
     <div className="app flex h-screen flex-col bg-background text-foreground">
-      {/* Top Rows */}
-      <div className="flex flex-col border-b border-slate-200/80 bg-slate-50/50 backdrop-blur-sm w-full shrink-0">
-        {/* Row 1 */}
-        <div className="h-11 border-b border-slate-200/80 flex items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <button className="flex items-center gap-1 font-semibold text-sm hover:bg-slate-200/50 px-2 py-1.5 rounded-lg transition-all text-slate-700">
-              Home <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
-            </button>
-            <div className="w-px h-4 bg-slate-200 mx-1" />
-            <div className="flex items-center gap-2 px-2.5 py-1 border border-slate-200 shadow-sm rounded-md min-w-[240px] bg-white hover:border-slate-300 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-400/20 transition-all cursor-text">
-              <FileText className="h-3.5 w-3.5 text-slate-400" />
-              <input
-                value={data.meta.fileName || ''}
-                onChange={(e) => setData({ ...data, meta: { ...data.meta, fileName: e.target.value } })}
-                placeholder="resume"
-                className="bg-transparent border-none outline-none text-[13px] w-full font-medium text-slate-700 placeholder:text-slate-400"
-              />
-            </div>
-          </div>
-          <div className="flex items-center">
-            <button className="flex items-center gap-1 text-slate-500 hover:text-slate-800 transition-colors group">
-              <div className="h-7 w-7 rounded-full bg-slate-400 flex items-center justify-center text-white shadow-sm group-hover:bg-slate-500 transition-colors">
-                <User className="h-4 w-4" />
-              </div>
-              <ChevronDown className="h-3.5 w-3.5" />
-            </button>
+      {/* Top Bar */}
+      <div className="print:hidden flex h-14 border-b border-slate-200/80 bg-slate-50/50 backdrop-blur-sm w-full shrink-0 items-center px-4 justify-between">
+        {/* Left: File Name */}
+        <div className="flex-1 flex items-center">
+          <div className="flex items-center gap-2 px-2.5 py-1.5 border border-slate-200 shadow-sm rounded-md min-w-[240px] max-w-[300px] bg-white hover:border-slate-300 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-400/20 transition-all cursor-text">
+            <FileText className="h-4 w-4 text-slate-400" />
+            <input
+              value={data.meta.fileName || ''}
+              onChange={(e) => setData({ ...data, meta: { ...data.meta, fileName: e.target.value } })}
+              placeholder="resume"
+              className="bg-transparent border-none outline-none text-[13px] w-full font-medium text-slate-700 placeholder:text-slate-400"
+            />
           </div>
         </div>
-        {/* Row 2 */}
-        <div className="h-9 flex items-center justify-center px-4 gap-2 text-[13px] font-medium">
-          <button className="flex items-center gap-1.5 hover:text-slate-900 hover:bg-slate-100/80 px-3 py-1.5 rounded-md transition-all text-slate-600">
-            <ArrowUpDown className="h-3.5 w-3.5" />
+
+        {/* Center: Tools */}
+        <div className="flex items-center justify-center gap-2 text-[13px] font-medium shrink-0">
+          <button className="flex items-center gap-1.5 hover:text-slate-900 hover:bg-slate-100/80 px-3 py-2 rounded-md transition-all text-slate-600">
+            <ArrowUpDown className="h-4 w-4" />
             Rearrange
           </button>
           <button
-            className="flex items-center gap-1.5 hover:text-slate-900 hover:bg-slate-100/80 px-3 py-1.5 rounded-md transition-all text-slate-600"
+            className="flex items-center gap-1.5 hover:text-slate-900 hover:bg-slate-100/80 px-3 py-2 rounded-md transition-all text-slate-600"
             onClick={() => setSidebarMode('templates')}
           >
-            <LayoutTemplate className="h-3.5 w-3.5" />
+            <LayoutTemplate className="h-4 w-4" />
             Templates
           </button>
           <button
-            className="flex items-center gap-1.5 hover:text-slate-900 hover:bg-slate-100/80 px-3 py-1.5 rounded-md transition-all text-slate-600"
+            className="flex items-center gap-1.5 hover:text-slate-900 hover:bg-slate-100/80 px-3 py-2 rounded-md transition-all text-slate-600"
             onClick={() => setSidebarMode('design')}
           >
-            <Palette className="h-3.5 w-3.5" />
+            <Palette className="h-4 w-4" />
             Design & Font
           </button>
+        </div>
+
+        {/* Right: Actions */}
+        <div className="flex-1 flex items-center justify-end gap-2">
+          <Button variant="outline" size="sm" onClick={handleImportClick} className="gap-1.5">
+            <Upload className="h-4 w-4" />
+            Import
+          </Button>
+          <Button variant="default" size="sm" onClick={handleExport} className="gap-1.5">
+            <FileDown className="h-4 w-4" />
+            Export
+          </Button>
         </div>
       </div>
 
@@ -162,84 +169,84 @@ export default function App() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -260, opacity: 0 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="editor-pane absolute top-0 bottom-0 left-0 z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] w-[260px] flex flex-col border-r border-slate-200/80 bg-white overflow-hidden"
+              className="print:hidden editor-pane absolute top-0 bottom-0 left-0 z-30 shadow-[4px_0_24px_rgba(0,0,0,0.05)] w-[260px] flex flex-col border-r border-slate-200/80 bg-white overflow-hidden"
             >
               <AnimatePresence mode="wait">
-            {sidebarMode === 'templates' ? (
-              <motion.div
-                key="templates"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.2 }}
-                className="flex-1 flex flex-col min-h-0"
-              >
-                <TemplateSidebar
-                  data={data}
-                  onChange={setData}
-                  onContinue={() => setSidebarMode('editor')}
-                />
-              </motion.div>
-            ) : sidebarMode === 'design' ? (
-              <motion.div
-                key="design"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.2 }}
-                className="flex-1 flex flex-col min-h-0"
-              >
-                <DesignSidebar
-                  data={data}
-                  onChange={setData}
-                  onContinue={() => setSidebarMode('editor')}
-                />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="form"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
-                className="flex flex-1 flex-col overflow-y-auto min-h-0"
-              >
-                <div className="sticky top-0 z-10 shrink-0 flex items-center gap-2 border-b bg-card/95 px-4 py-3 backdrop-blur">
-                  <FileText className="h-5 w-5 text-primary" />
-                  <div>
-                    <h1 className="text-sm font-bold leading-tight">Resume Builder</h1>
-                    <p className="text-[11px] text-muted-foreground">Edit, theme, export JSON / PDF</p>
-                  </div>
-                  <div className="ml-auto flex items-center gap-1.5">
-                    <span className="mr-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">UI</span>
-                    {UI_THEMES.map((t) => (
-                      <button
-                        key={t.id}
-                        type="button"
-                        title={`${t.name} UI theme`}
-                        aria-label={`${t.name} UI theme`}
-                        onClick={() => setUiTheme(t.id)}
-                        className={cn(
-                          'h-5 w-5 rounded-full border transition-transform duration-200 hover:scale-110',
-                          uiTheme === t.id
-                            ? 'border-primary ring-2 ring-primary ring-offset-2'
-                            : 'border-border'
-                        )}
-                        style={{ background: `linear-gradient(135deg, ${t.colors[0]} 50%, ${t.colors[1]} 50%)` }}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <Form
-                  data={data}
-                  onChange={setData}
-                  onImport={handleImportClick}
-                  onExport={handleExport}
-                  onOpenTemplates={() => setSidebarMode('templates')}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+                {sidebarMode === 'templates' ? (
+                  <motion.div
+                    key="templates"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex-1 flex flex-col min-h-0"
+                  >
+                    <TemplateSidebar
+                      data={data}
+                      onChange={setData}
+                      onContinue={() => setSidebarMode('editor')}
+                    />
+                  </motion.div>
+                ) : sidebarMode === 'design' ? (
+                  <motion.div
+                    key="design"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex-1 flex flex-col min-h-0"
+                  >
+                    <DesignSidebar
+                      data={data}
+                      onChange={setData}
+                      onContinue={() => setSidebarMode('editor')}
+                    />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="form"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex flex-1 flex-col overflow-y-auto min-h-0"
+                  >
+                    <div className="sticky top-0 z-10 shrink-0 flex items-center gap-2 border-b bg-card/95 px-4 py-3 backdrop-blur">
+                      <FileText className="h-5 w-5 text-primary" />
+                      <div>
+                        <h1 className="text-sm font-bold leading-tight">Resume Builder</h1>
+                        <p className="text-[11px] text-muted-foreground">Edit, theme, export JSON / PDF</p>
+                      </div>
+                      <div className="ml-auto flex items-center gap-1.5">
+                        <span className="mr-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">UI</span>
+                        {UI_THEMES.map((t) => (
+                          <button
+                            key={t.id}
+                            type="button"
+                            title={`${t.name} UI theme`}
+                            aria-label={`${t.name} UI theme`}
+                            onClick={() => setUiTheme(t.id)}
+                            className={cn(
+                              'theme-bubble h-5 w-5 rounded-full border transition-transform duration-200 hover:scale-110',
+                              uiTheme === t.id
+                                ? 'border-primary ring-2 ring-primary ring-offset-2'
+                                : 'border-border'
+                            )}
+                            style={{ background: `linear-gradient(135deg, ${t.colors[0]} 50%, ${t.colors[1]} 50%)` }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <Form
+                      data={data}
+                      onChange={setData}
+                      onImport={handleImportClick}
+                      onExport={handleExport}
+                      onOpenTemplates={() => setSidebarMode('templates')}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.aside>
           )}
         </AnimatePresence>
@@ -279,14 +286,14 @@ export default function App() {
                 <FileJson className="h-4 w-4" />
                 Export
               </Button>
-              <Button size="sm" onClick={handlePrint}>
+              <Button size="sm" onClick={handleDownloadPDF}>
                 <FileDown className="h-4 w-4" />
                 Download PDF
               </Button>
             </div>
           </motion.div>
 
-          <div className="preview-scroll flex-1 overflow-auto bg-background p-6">
+          <div className="preview-scroll flex-1 overflow-auto bg-background p-6 print:p-0 print:overflow-visible print:bg-transparent">
             <div className="mx-auto flex w-fit flex-col items-center gap-4">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -295,13 +302,29 @@ export default function App() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -16, scale: 0.99 }}
                   transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className="page-frame bg-white shadow-2xl"
+                  className="page-frame bg-white shadow-2xl relative print:shadow-none print:m-0"
                 >
                   <Template data={data} onChange={setData} />
                 </motion.div>
               </AnimatePresence>
             </div>
           </div>
+
+          {/* Floating Toolbar — fully independent, outside preview-scroll */}
+          <FloatingToolbar
+            onTogglePreview={() => setSidebarMode(sidebarMode === 'editor' ? 'design' : 'editor')}
+            onDownload={handleDownloadPDF}
+            onShare={() => {
+              try {
+                const url = new window.URL(window.location.href);
+                url.searchParams.set('data', btoa(encodeURIComponent(JSON.stringify(data))));
+                window.navigator.clipboard.writeText(url.toString());
+                showToast('Share link copied to clipboard!', 'success');
+              } catch (err) {
+                showToast('Resume too large to share via URL', 'error');
+              }
+            }}
+          />
         </main>
       </div>
 
